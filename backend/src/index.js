@@ -1,7 +1,8 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
-
 import path from 'path';
+import cors from 'cors';
+
 import dotenv from 'dotenv';
 dotenv.config();
 import { clerkMiddleware } from '@clerk/express';
@@ -22,6 +23,12 @@ const __dirname = path.resolve();
 // #endregion
 
 // #region general middleware
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json()); // this adds auth to the req obj => req.auth.userId
 app.use(clerkMiddleware());
 app.use(
