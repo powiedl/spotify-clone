@@ -12,6 +12,7 @@ const AuthCallbackPage = () => {
 
   useEffect(() => {
     const syncUser = async () => {
+      console.log('start syncUser in AuthCallbackPage');
       if (!isLoaded || !user || syncAttempted.current) return;
       try {
         syncAttempted.current = true;
@@ -24,6 +25,7 @@ const AuthCallbackPage = () => {
       } catch (error) {
         console.log('Error in auth callback', error);
       } finally {
+        console.log('finished syncUser in AuthCallbackPage - go to homepage');
         navigate('/');
       }
     };

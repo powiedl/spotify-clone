@@ -29,8 +29,8 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json()); // this adds auth to the req obj => req.auth.userId
-app.use(clerkMiddleware());
+app.use(express.json());
+app.use(clerkMiddleware()); // this adds auth to the req obj => req.auth().userId
 app.use(
   fileUpload({
     useTempFiles: true,
