@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 import { formatDuration } from '@/pages/album/AlbumPage';
-import { usePlayerStore } from '@/store/usePlayerStore';
+import { PlayerMode, usePlayerStore } from '@/store/usePlayerStore';
 import {
   Laptop2,
   ListMusic,
@@ -17,12 +18,20 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 const PlaybackControls = () => {
-  const { currentSong, isPlaying, togglePlay, playNext, playPrevious } =
-    usePlayerStore();
+  const {
+    currentSong,
+    isPlaying,
+    togglePlay,
+    playNext,
+    playPrevious,
+    getPlayerMode,
+    setPlayerMode,
+  } = usePlayerStore();
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const currentPlayerMode = getPlayerMode();
 
   useEffect(() => {
     const handleEnded = () => {
@@ -51,6 +60,15 @@ const PlaybackControls = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0];
     }
+  };
+  const handleShuffleClick = () => {
+    if (getPlayerMode() !== PlayerMode.RANDOM) setPlayerMode(PlayerMode.RANDOM);
+    else setPlayerMode(PlayerMode.NORMAL);
+  };
+  const handleRepeatClick = () => {
+    if (getPlayerMode() !== PlayerMode.ENDLESS)
+      setPlayerMode(PlayerMode.ENDLESS);
+    else setPlayerMode(PlayerMode.NORMAL);
   };
   return (
     <footer className='h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 px-4'>
@@ -81,7 +99,12 @@ const PlaybackControls = () => {
             <Button
               size='icon'
               variant={'ghost'}
-              className='hidden sm:inline-flex hover:text-white text-zinc-400'
+              onClick={handleShuffleClick}
+              className={cn(
+                'hover:text-white text-zinc-400',
+                getPlayerMode() === PlayerMode.RANDOM &&
+                  'text-zinc-300 bg-zinc-700 hover:bg-zinc-600'
+              )}
             >
               <Shuffle className='size-4' />
             </Button>
@@ -118,7 +141,12 @@ const PlaybackControls = () => {
             <Button
               size='icon'
               variant='ghost'
-              className='hover:text-white text-zinc-400'
+              onClick={handleRepeatClick}
+              className={cn(
+                'hover:text-white text-zinc-400',
+                getPlayerMode() === PlayerMode.ENDLESS &&
+                  'text-zinc-300 bg-zinc-700 hover:bg-zinc-600'
+              )}
             >
               <Repeat className='size-4' />
             </Button>

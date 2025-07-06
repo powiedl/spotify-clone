@@ -1,8 +1,14 @@
 import { create } from 'zustand';
 import type { Song } from '@/types';
+export enum PlayerMode {
+  NORMAL = 'NORMAL',
+  RANDOM = 'RANDOM',
+  ENDLESS = 'ENDLESS',
+}
 
 interface PlayerStore {
   currentSong: Song | null;
+  mode: PlayerMode;
   isPlaying: boolean;
   queue: Song[];
   currentIndex: number;
@@ -13,9 +19,12 @@ interface PlayerStore {
   togglePlay: () => void;
   playNext: () => void;
   playPrevious: () => void;
+  setPlayerMode: (m: PlayerMode) => void;
+  getPlayerMode: () => PlayerMode;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
+  mode: PlayerMode.NORMAL,
   currentIndex: -1,
   currentSong: null,
   isPlaying: false,
@@ -62,7 +71,14 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         isPlaying: true,
       });
     } else {
-      set({ isPlaying: false });
+      if (get().mode === PlayerMode.ENDLESS) {
+        const nextSong = queue[0];
+        set({
+          currentSong: nextSong,
+          currentIndex: 0,
+          isPlaying: true,
+        });
+      } else set({ isPlaying: false });
     }
   },
   playPrevious: () => {
@@ -76,8 +92,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         currentIndex: prevIndex,
         isPlaying: true,
       });
-    } else {
-      set({ isPlaying: false });
-    }
+    } else set({ isPlaying: false });
   },
+  setPlayerMode: (m) => {
+    set({ mode: m });
+  },
+  getPlayerMode: () => get().mode,
 }));
