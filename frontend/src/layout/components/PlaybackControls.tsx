@@ -31,7 +31,6 @@ const PlaybackControls = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const currentPlayerMode = getPlayerMode();
 
   useEffect(() => {
     const handleEnded = () => {

@@ -5,7 +5,7 @@ import cloudinary from '../lib/cloudinary.js';
 const uploadToCloudinary = async (file) => {
   // helper function to upload files to cloudinary
   try {
-    const result = await cloudinary.uploader.upload(file.tempFileDir, {
+    const result = await cloudinary.uploader.upload(file.tempFilePath, {
       resource_type: 'auto',
     });
     return result.secure_url;
@@ -37,7 +37,9 @@ export const createSong = async (req, res, next) => {
     const imageFile = req.files.imageFile;
 
     // save files to cloudinary;
+    console.log('uploading audioFile', audioFile);
     const audioUrl = await uploadToCloudinary(audioFile);
+    console.log('uploading imageFile', imageFile);
     const imageUrl = await uploadToCloudinary(imageFile);
 
     const song = new Song({
@@ -90,10 +92,17 @@ export const deleteSong = async (req, res, next) => {
 // #region Admin albums endpoints
 export const createAlbum = async (req, res, next) => {
   try {
-    if (!req.files || !req.files.audioFile || !req.files.imageFile) {
+    if (!req.files || !req.files.imageFile) {
+      console.log('createAlbum - missing files in request');
       return res.status(400).json({ message: 'Please upload all files' });
     }
     const { title, artist, releaseYear } = req.body;
+    if (!title || !artist || !releaseYear) {
+      console.log('CreateAlbum - missing required information in request');
+      return res.status(400).json({
+        message: 'Please provide a title, an artist and a releaseYear',
+      });
+    }
     const imageFile = req.files.imageFile;
 
     // save files to cloudinary;

@@ -6,6 +6,12 @@ import { config } from 'dotenv';
 config();
 
 const seedDatabase = async () => {
+  if (!process.env.MONGO_URI) {
+    console.log(
+      'MONGO_URI connection string not available in the environment!'
+    );
+    process.exit(1);
+  }
   try {
     await mongoose.connect(process.env.MONGO_URI);
 

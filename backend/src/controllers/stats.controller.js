@@ -24,20 +24,13 @@ export const getStats = async (req, res, next) => {
           { $count: 'count' },
         ]),
       ]);
-    console.log({
+
+    return res.status(200).json({
       totalSongs,
       totalUsers,
       totalAlbums,
       totalArtists: uniqueArtists[0]?.count || 0,
     });
-    return res
-      .status(200)
-      .json({
-        totalSongs,
-        totalUsers,
-        totalAlbums,
-        totalArtists: uniqueArtists[0]?.count || 0,
-      });
   } catch (error) {
     console.log('Error in getStats', error);
     next(error);
