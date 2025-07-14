@@ -9,17 +9,9 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { axiosInstance } from '@/lib/axios';
-import { useMusicStore } from '@/store/useMusicStore';
 import { Plus, Upload } from 'lucide-react';
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface NewAlbum {

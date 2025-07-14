@@ -55,11 +55,11 @@ const PlaybackControls = () => {
     };
   }, [currentSong]);
 
-  const handleSeek = (value: number[]) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = value[0];
-    }
-  };
+  // const handleSeek = (value: number[]) => {
+  //   if (audioRef.current) {
+  //     audioRef.current.currentTime = value[0];
+  //   }
+  // };
   const handleShuffleClick = () => {
     if (getPlayerMode() !== PlayerMode.RANDOM) setPlayerMode(PlayerMode.RANDOM);
     else setPlayerMode(PlayerMode.NORMAL);

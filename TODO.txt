@@ -1,0 +1,3 @@
+- add vertical scroll bar in the list of the albums
+- add vertical scroll bar in the chat view
+- improve time stamp of the messages (if the message is not from "today" add the date)

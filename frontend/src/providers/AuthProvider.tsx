@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/axios';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useChatStore } from '@/store/useChatStore';
 import { useAuth } from '@clerk/clerk-react';
 import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -13,17 +14,23 @@ const updateApiToken = (token: string | null) => {
 };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { getToken } = useAuth();
+  const { getToken, userId } = useAuth();
   const [loading, setLoading] = useState(true);
   const { checkAdminStatus } = useAuthStore();
+  const { initSocket, disconnectSocket } = useChatStore();
 
   useEffect(() => {
     const initAuth = async () => {
       try {
         const token = await getToken();
+        //console.log('AuthProvider, token:', token);
         updateApiToken(token);
         if (token) {
           await checkAdminStatus();
+          // init socket
+          if (userId) {
+            initSocket(userId);
+          }
         }
       } catch (error) {
         updateApiToken(null);
@@ -34,7 +41,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     initAuth();
-  }, [getToken, checkAdminStatus]);
+
+    // cleanup
+    return () => disconnectSocket();
+  }, [getToken, userId, initSocket, disconnectSocket, checkAdminStatus]);
 
   if (loading)
     return (

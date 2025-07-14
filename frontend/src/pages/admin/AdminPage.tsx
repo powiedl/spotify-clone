@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import { useMusicStore } from '@/store/useMusicStore';
 
 const AdminPage = () => {
-  const { isAdmin, error, isLoading } = useAuthStore();
-  const { stats, fetchAlbums, fetchSongs, fetchStats } = useMusicStore();
+  const { isAdmin, isLoading } = useAuthStore();
+  const { fetchAlbums, fetchSongs, fetchStats } = useMusicStore();
   useEffect(() => {
     const fetchAll = async () => {
       await Promise.all([fetchAlbums(), fetchSongs(), fetchStats()]);
